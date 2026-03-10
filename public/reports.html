@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KGL — Reports</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --green: #1a6b3a;
+        --green-light: #27a85a;
+        --gold: #f4a923;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f4f6f4;
+      }
+      .topbar {
+        background: #fff;
+        padding: 14px 24px;
+        border-bottom: 1px solid #e5eae5;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      .topbar .back {
+        background: none;
+        border: 1px solid #dde;
+        border-radius: 8px;
+        padding: 6px 12px;
+        color: #555;
+        font-size: 0.8rem;
+        text-decoration: none;
+      }
+      .topbar h1 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a2e1a;
+        margin: 0;
+      }
+      .content {
+        padding: 24px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .stat-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid #edf2ed;
+        height: 100%;
+      }
+      .stat-card .icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+      .stat-card .val {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a2e1a;
+        margin-bottom: 2px;
+      }
+      .stat-card .lbl {
+        color: #6b7c6b;
+        font-size: 0.76rem;
+      }
+      .icon-g {
+        background: rgba(26, 107, 58, 0.1);
+        color: var(--green);
+      }
+      .icon-gold {
+        background: rgba(244, 169, 35, 0.12);
+        color: #c87c00;
+      }
+      .icon-b {
+        background: rgba(23, 100, 184, 0.1);
+        color: #1764b8;
+      }
+      .icon-r {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+      }
+      .section-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid #edf2ed;
+        margin-top: 20px;
+        overflow: hidden;
+      }
+      .section-card .hd {
+        padding: 16px 22px;
+        border-bottom: 1px solid #edf2ed;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #1a2e1a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .branch-box {
+        padding: 20px 22px;
+        border-bottom: 1px solid #f5f5f5;
+      }
+      .branch-box:last-child {
+        border-bottom: none;
+      }
+      .branch-box h6 {
+        font-weight: 700;
+        color: #1a2e1a;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        color: #3a4a3a;
+        padding: 5px 0;
+        border-bottom: 1px dashed #eee;
+      }
+      .metric:last-child {
+        border-bottom: none;
+      }
+      .metric strong {
+        color: #1a2e1a;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="topbar">
+        <a href="dashboard.html" class="back"
+          ><i class="fas fa-arrow-left me-1"></i> Back</a
+        >
+        <h1>
+          <i class="fas fa-chart-bar me-2" style="color: var(--green)"></i
+          >Reports & Summary
+        </h1>
+      </div>
+
+      <div class="content">
+        <div
+          class="alert"
+          style="
+            background: linear-gradient(
+              135deg,
+              var(--green),
+              var(--green-light)
+            );
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin-bottom: 20px;
+          "
+        >
+          <strong><i class="fas fa-chart-pie me-2"></i>Business Summary</strong> — {{user.role==='Director'?'All Branches Combined':'Branch: '+user.branch}}
+        </div>
+
+        <div class="row g-3">
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="icon icon-g">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="val">{{data.salesCount||0}}</div>
+              <div class="lbl">Total Sales</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="icon icon-gold"><i class="fas fa-coins"></i></div>
+              <div class="val">{{fmt(data.totalSalesAmount)}}</div>
+              <div class="lbl">Revenue (UGX)</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="icon icon-b">
+                <i class="fas fa-file-invoice-dollar"></i>
+              </div>
+              <div class="val">{{fmt(data.unpaidCredit)}}</div>
+              <div class="lbl">Unpaid Credit</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="icon icon-r">
+                <i class="fas fa-truck-loading"></i>
+              </div>
+              <div class="val">{{fmt(data.totalProcurementCost)}}</div>
+              <div class="lbl">Procurement Cost</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFIT ESTIMATE -->
+        <div class="section-card">
+          <div class="hd">
+            <i class="fas fa-calculator" style="color: var(--green)"></i> Profit
+            Estimate
+          </div>
+          <div style="padding: 20px 22px">
+            <div class="metric">
+              <span>Total Sales Revenue</span
+              ><strong>UGX {{fmt(data.totalSalesAmount)}}</strong>
+            </div>
+            <div class="metric">
+              <span>Total Procurement Cost</span
+              ><strong>UGX {{fmt(data.totalProcurementCost)}}</strong>
+            </div>
+            <div class="metric" style="font-size: 0.9rem; padding-top: 10px">
+              <span style="font-weight: 700">Estimated Gross Profit</span>
+              <strong :style="{color:profit>=0?'var(--green)':'#dc3545'}"
+                >UGX {{fmt(profit)}}</strong
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- BRANCH COMPARISON (Director only) -->
+        <div class="section-card" v-if="user.role==='Director' && branchReport">
+          <div class="hd">
+            <i class="fas fa-code-branch" style="color: var(--green)"></i>
+            Branch Comparison
+          </div>
+          <div
+            class="branch-box"
+            v-for="(info,branch) in branchReport"
+            :key="branch"
+          >
+            <h6>
+              <i
+                class="fas fa-map-marker-alt me-2"
+                style="color: var(--green)"
+              ></i
+              >{{branch}} Branch
+            </h6>
+            <div class="metric">
+              <span>Number of Sales</span><strong>{{info.count}}</strong>
+            </div>
+            <div class="metric">
+              <span>Total Tonnage Sold</span
+              ><strong>{{info.totalTonnage.toLocaleString()}} kg</strong>
+            </div>
+            <div class="metric">
+              <span>Total Revenue</span
+              ><strong>UGX {{fmt(info.totalAmount)}}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- STOCK LEVELS -->
+        <div class="section-card">
+          <div class="hd">
+            <i class="fas fa-boxes" style="color: var(--green)"></i> Current
+            Stock Levels
+          </div>
+          <div style="padding: 10px 22px">
+            <div class="metric" v-for="s in data.stockLevels" :key="s._id">
+              <span>{{s.produceName}} ({{s.branch}})</span>
+              <strong>{{s.currentTonnage.toLocaleString()}} kg</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      Vue.createApp({
+        data() {
+          return {
+            user: JSON.parse(localStorage.getItem("kgl_user") || "{}"),
+            data: {},
+            branchReport: null,
+          };
+        },
+        computed: {
+          profit() {
+            return (
+              (this.data.totalSalesAmount || 0) -
+              (this.data.totalProcurementCost || 0)
+            );
+          },
+        },
+        methods: {
+          fmt(n) {
+            return n ? Number(n).toLocaleString() : "0";
+          },
+          async load() {
+  try {
+    const t = localStorage.getItem("kgl_token");
+    const r = await fetch("/api/reports/summary", {
+      headers: { Authorization: "Bearer " + t },
+    });
+    if (r.status === 401) { localStorage.clear(); window.location.href = "/login.html"; return; }
+    this.data = await r.json();
+    if (this.user.role === "Director") {
+      const br = await fetch("/api/reports/sales-by-branch", {
+        headers: { Authorization: "Bearer " + t },
+      });
+      this.branchReport = await br.json();
+    }
+  } catch {
+    console.error("Failed to load reports.");
+  }
+}
+},
+        mounted() {
+          const token = localStorage.getItem("kgl_token");
+          if (!token) {
+            window.location.href = "/login.html";
+            return;
+          }
+          if (this.user.role === "Sales Agent") {
+            window.location.href = "/dashboard.html";
+            return;
+          }
+          try {
+  const payload = JSON.parse(atob(token.split(".")[1]));
+  if (payload.exp * 1000 < Date.now()) {
+    localStorage.clear();
+    window.location.href = "/login.html";
+    return;
+  }
+} catch {
+  localStorage.clear();
+  window.location.href = "/login.html";
+  return;
+}
+          this.load();
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

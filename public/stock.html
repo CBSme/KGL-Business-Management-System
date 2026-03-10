@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KGL — Stock Levels</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--green:#1a6b3a;--green-light:#27a85a;--gold:#f4a923}
+body{font-family:'Poppins',sans-serif;background:#f4f6f4}
+.topbar{background:#fff;padding:14px 24px;border-bottom:1px solid #e5eae5;
+  display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.topbar .back{background:none;border:1px solid #dde;border-radius:8px;padding:6px 12px;color:#555;font-size:.8rem;text-decoration:none}
+.topbar h1{font-size:1.1rem;font-weight:700;color:#1a2e1a;margin:0}
+.content{padding:24px}
+.stock-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);
+  border:1px solid #edf2ed;overflow:hidden;margin-bottom:16px}
+.stock-card-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #edf2ed}
+.stock-card-header h5{margin:0;font-size:.9rem;font-weight:700;color:#1a2e1a}
+.stock-item{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid #f5f5f5}
+.stock-item:last-child{border-bottom:none}
+.stock-item .produce-name{font-weight:600;font-size:.85rem;color:#2a3a2a}
+.stock-item .produce-kg{font-size:.82rem;color:#6b7c6b}
+.progress{height:8px;border-radius:8px;background:#f0f0f0;flex:1;margin:0 16px}
+.progress-bar-ok{background:linear-gradient(90deg,var(--green),var(--green-light))}
+.progress-bar-low{background:linear-gradient(90deg,#ffc107,#fd7e14)}
+.progress-bar-zero{background:#dc3545}
+.badge-stock{font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:600;white-space:nowrap}
+.badge-ok{background:#d4edda;color:#155724}
+.badge-low{background:#fff3cd;color:#856404}
+.badge-zero{background:#f8d7da;color:#721c24}
+.summary-bar{background:linear-gradient(135deg,var(--green),var(--green-light));
+  color:#fff;border-radius:14px;padding:20px 24px;margin-bottom:20px;display:flex;gap:24px;flex-wrap:wrap}
+.summary-bar .stat{text-align:center}
+.summary-bar .stat .val{font-size:1.3rem;font-weight:700}
+.summary-bar .stat .lbl{font-size:.72rem;opacity:.8}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <a href="dashboard.html" class="back"><i class="fas fa-arrow-left me-1"></i> Back</a>
+    <h1><i class="fas fa-boxes me-2" style="color:var(--green)"></i>Stock Levels</h1>
+  </div>
+
+  <div class="content">
+    <div class="summary-bar">
+      <div class="stat"><div class="val">{{total.toLocaleString()}} kg</div><div class="lbl">Total Stock</div></div>
+      <div class="stat"><div class="val">{{okCount}}</div><div class="lbl">Products OK</div></div>
+      <div class="stat"><div class="val">{{lowCount}}</div><div class="lbl">Low Stock</div></div>
+      <div class="stat"><div class="val">{{zeroCount}}</div><div class="lbl">Out of Stock</div></div>
+    </div>
+
+    <div v-for="branch in ['Maganjo','Matugga']" :key="branch">
+      <div v-if="user.role==='Director'||user.branch===branch">
+        <div class="stock-card">
+          <div class="stock-card-header">
+            <h5><i class="fas fa-map-marker-alt me-2" style="color:var(--green)"></i>{{branch}} Branch</h5>
+            <span style="font-size:.78rem;color:#6b7c6b">{{branchStocks(branch).length}} produce types</span>
+          </div>
+          <div v-for="s in branchStocks(branch)" :key="s._id" class="stock-item">
+            <div style="min-width:130px">
+              <div class="produce-name">{{s.produceName}}</div>
+              <div class="produce-kg">{{s.currentTonnage.toLocaleString()}} kg remaining</div>
+            </div>
+            <div class="progress">
+              <div class="progress-bar rounded" :class="s.currentTonnage===0?'progress-bar-zero':s.currentTonnage<500?'progress-bar-low':'progress-bar-ok'"
+                :style="{width: Math.min(100,s.currentTonnage/50)+'%'}"></div>
+            </div>
+            <span class="badge-stock" :class="s.currentTonnage===0?'badge-zero':s.currentTonnage<500?'badge-low':'badge-ok'">
+              {{s.currentTonnage===0?'⛔ Out of Stock':s.currentTonnage<500?'⚠ Low Stock':'✅ Good'}}
+            </span>
+          </div>
+          <div v-if="!branchStocks(branch).length" class="text-center py-3 text-muted" style="font-size:.82rem">No stock data for this branch.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+Vue.createApp({
+  data() { return { user:JSON.parse(localStorage.getItem('kgl_user')||'{}'), stocks:[] }; },
+  computed: {
+    total() { return this.stocks.reduce((s,r)=>s+r.currentTonnage,0); },
+    okCount() { return this.stocks.filter(s=>s.currentTonnage>=500).length; },
+    lowCount() { return this.stocks.filter(s=>s.currentTonnage>0&&s.currentTonnage<500).length; },
+    zeroCount() { return this.stocks.filter(s=>s.currentTonnage===0).length; }
+  },
+  methods: {
+    branchStocks(b) { return this.stocks.filter(s=>s.branch===b); },
+    async load() {
+      const r = await fetch('/api/stock',{headers:{Authorization:'Bearer '+localStorage.getItem('kgl_token')}});
+      this.stocks = await r.json();
+    }
+  },
+  mounted()  {
+  const token = localStorage.getItem("kgl_token");
+  if (!token) {
+            window.location.href = "/login.html";
+            return;
+          }
+          try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            if (payload.exp * 1000 < Date.now()) {
+              localStorage.clear();
+              window.location.href = "/login.html";
+              return;
+            }
+          } catch {
+            localStorage.clear();
+            window.location.href = "/login.html";
+            return;
+          }
+  this.load(); }
+}).mount('#app');
+</script>
+</body>
+</html>

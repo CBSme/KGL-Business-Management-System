@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KGL — Login</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --green: #1a6b3a;
+        --green-light: #27a85a;
+        --gold: #f4a923;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #0d1f14 0%,
+          #0a2e18 50%,
+          #1a4a2a 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 44px 36px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+      }
+      .logo {
+        width: 68px;
+        height: 68px;
+        background: linear-gradient(135deg, var(--green-light), var(--gold));
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 26px;
+        color: #fff;
+      }
+      h2 {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.5rem;
+        text-align: center;
+      }
+      .sub {
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.8rem;
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      label {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.82rem;
+        font-weight: 500;
+      }
+      .form-control {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff !important;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-family: "Poppins", sans-serif;
+      }
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--green-light);
+        box-shadow: 0 0 0 3px rgba(39, 168, 90, 0.15);
+        color: #fff !important;
+      }
+      .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+      }
+      .btn-login {
+        background: linear-gradient(135deg, var(--green), var(--green-light));
+        border: none;
+        color: #fff;
+        width: 100%;
+        padding: 13px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: "Poppins", sans-serif;
+        transition: all 0.3s;
+        box-shadow: 0 4px 16px rgba(39, 168, 90, 0.35);
+      }
+      .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(39, 168, 90, 0.45);
+      }
+      .hint {
+        background: rgba(244, 169, 35, 0.08);
+        border: 1px solid rgba(244, 169, 35, 0.2);
+        border-radius: 10px;
+        padding: 11px 14px;
+        margin-bottom: 18px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.74rem;
+      }
+      .hint strong {
+        color: var(--gold);
+      }
+      .err {
+        background: rgba(220, 53, 69, 0.15);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: #f8a8af;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 0.82rem;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="card">
+        <div class="logo"><i class="fas fa-seedling"></i></div>
+        <h2>Karibu Groceries</h2>
+        <p class="sub">Business Management System — KGL</p>
+
+        <div class="err" id="errBox">
+          <i class="fas fa-exclamation-circle me-2"></i>{{errMsg}}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"
+            ><i class="fas fa-user me-1"></i> Username</label
+          >
+          <input
+            v-model="username"
+            type="text"
+            class="form-control"
+            placeholder="Enter your username"
+            @keyup.enter="login"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"
+            ><i class="fas fa-lock me-1"></i> Password</label
+          >
+          <input
+            v-model="password"
+            type="password"
+            class="form-control"
+            placeholder="Enter your password"
+            @keyup.enter="login"
+          />
+        </div>
+        <button class="btn-login" @click="login" :disabled="loading">
+          <span v-if="!loading"
+            ><i class="fas fa-sign-in-alt me-2"></i>Sign In</span
+          >
+          <span v-else
+            ><span class="spinner-border spinner-border-sm me-2"></span>Signing
+            in...</span
+          >
+        </button>
+        <a
+          href="forgot-password.html"
+          style="
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: #6b7c6b;
+            text-decoration: none;
+          "
+        >
+          <i class="fas fa-key me-1"></i>Forgot your password?
+        </a>
+        <p
+          class="text-center mt-3"
+          style="color: rgba(255, 255, 255, 0.25); font-size: 0.72rem"
+        >
+          <i class="fas fa-shield-alt me-1"></i> Karibu Groceries Ltd &copy;
+          2024
+        </p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      Vue.createApp({
+        data() {
+          return { username: "", password: "", loading: false, errMsg: "" };
+        },
+        methods: {
+          async login() {
+            this.errMsg = "";
+            document.getElementById("errBox").style.display = "none";
+            if (!this.username || !this.password) {
+              this.showErr("Please enter username and password.");
+              return;
+            }
+            this.loading = true;
+            try {
+              const r = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  username: this.username,
+                  password: this.password,
+                }),
+              });
+              const d = await r.json();
+              if (r.ok) {
+                localStorage.setItem("kgl_token", d.token);
+                localStorage.setItem("kgl_user", JSON.stringify(d.user));
+                window.location.href = "/dashboard.html";
+              } else {
+                this.showErr(d.error);
+              }
+            } catch {
+              this.showErr("Cannot connect. Check server is running.");
+            } finally {
+              this.loading = false;
+            }
+          },
+          showErr(msg) {
+            this.errMsg = msg;
+            document.getElementById("errBox").style.display = "block";
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

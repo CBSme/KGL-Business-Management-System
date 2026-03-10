@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KGL — User Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --green: #1a6b3a;
+        --green-light: #27a85a;
+        --gold: #f4a923;
+        --sidebar-w: 260px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f4f6f4;
+        display: flex;
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: linear-gradient(180deg, #0d1f14, #1a4a2a);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+      }
+      .sidebar-logo {
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .sidebar-logo .icon {
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, var(--green-light), var(--gold));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #fff;
+      }
+      .sidebar-logo span {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.2;
+      }
+      .sidebar-logo small {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.7rem;
+      }
+      .user-info {
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .user-info .name {
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+      .user-info .role {
+        font-size: 0.72rem;
+        padding: 2px 8px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-top: 3px;
+      }
+      .role-Director {
+        background: rgba(244, 169, 35, 0.2);
+        color: var(--gold);
+      }
+      .nav-section {
+        padding: 12px 0;
+      }
+      .nav-label {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 6px 20px;
+      }
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 20px;
+        color: rgba(255, 255, 255, 0.55);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.06);
+        border-left-color: var(--green-light);
+      }
+      .nav-link i {
+        width: 18px;
+        text-align: center;
+      }
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        padding: 0;
+      }
+      .topbar {
+        background: #fff;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e5eae5;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .topbar h1 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1a2e1a;
+      }
+      .content {
+        padding: 28px;
+      }
+      .table-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid #edf2ed;
+        overflow: hidden;
+      }
+      .table-card .t-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #edf2ed;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .table-card .t-header h5 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #1a2e1a;
+        margin: 0;
+      }
+      .role-badge {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+      .badge-director {
+        background: rgba(244, 169, 35, 0.15);
+        color: #b07800;
+      }
+      .badge-manager {
+        background: rgba(39, 168, 90, 0.15);
+        color: #1a6b3a;
+      }
+      .badge-agent {
+        background: rgba(23, 162, 184, 0.15);
+        color: #0d6e7a;
+      }
+      .btn-logout {
+        background: none;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: #dc3545;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-logout:hover {
+        background: rgba(220, 53, 69, 0.08);
+      }
+      .btn-reset {
+        background: none;
+        border: 1px solid rgba(244, 169, 35, 0.4);
+        color: #b07800;
+        border-radius: 8px;
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-reset:hover {
+        background: rgba(244, 169, 35, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <div class="icon"><i class="fas fa-seedling"></i></div>
+          <div>
+            <span>KGL System</span><br /><small>Karibu Groceries</small>
+          </div>
+        </div>
+        <div class="user-info">
+          <div class="name">{{user.fullName}}</div>
+          <span class="role role-Director">{{user.role}}</span>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">Main Menu</div>
+          <a href="dashboard.html" class="nav-link"
+            ><i class="fas fa-home"></i> Dashboard</a
+          >
+          <a href="stock.html" class="nav-link"
+            ><i class="fas fa-boxes"></i> Stock Levels</a
+          >
+          <a href="reports.html" class="nav-link"
+            ><i class="fas fa-chart-bar"></i> Reports</a
+          >
+          <a href="users.html" class="nav-link active"
+            ><i class="fas fa-users"></i> User Management</a
+          >
+        </div>
+        <div
+          style="
+            margin-top: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          "
+        >
+          <button class="btn-logout w-100" @click="logout">
+            <i class="fas fa-sign-out-alt me-2"></i>Logout
+          </button>
+        </div>
+      </nav>
+
+      <div class="main">
+        <div class="topbar">
+          <h1>
+            <i class="fas fa-users me-2" style="color: var(--green)"></i>User
+            Management
+          </h1>
+        </div>
+
+        <div class="content">
+          <div
+            v-if="msg"
+            :class="'alert alert-'+(msgOk?'success':'danger')"
+            style="border-radius: 12px; margin-bottom: 20px"
+          >
+            <i class="fas fa-exclamation-circle me-2"></i>{{msg}}
+          </div>
+
+          <div class="table-card">
+            <div class="t-header">
+              <h5>
+                <i class="fas fa-users me-2" style="color: var(--green)"></i>All
+                Staff Accounts
+              </h5>
+              <span style="font-size: 0.78rem; color: #6b7c6b"
+                >{{users.length}} users</span
+              >
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0" style="font-size: 0.83rem">
+                <thead style="background: #f8fbf8">
+                  <tr>
+                    <th class="ps-3">Full Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Branch</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="u in users" :key="u._id">
+                    <td class="ps-3 fw-semibold">{{u.fullName}}</td>
+                    <td style="color: #6b7c6b">{{u.username}}</td>
+                    <td>
+                      <span
+                        class="role-badge"
+                        :class="u.role==='Director'?'badge-director':u.role==='Manager'?'badge-manager':'badge-agent'"
+                        >{{u.role}}</span
+                      >
+                    </td>
+                    <td>{{u.branch}}</td>
+                    <td>
+                      <button
+                        class="btn-reset"
+                        @click="openReset(u)"
+                        :disabled="u._id===user.id"
+                      >
+                        <i class="fas fa-key me-1"></i>Reset Password
+                      </button>
+                    </td>
+                  </tr>
+                  <tr v-if="!users.length">
+                    <td colspan="5" class="text-center py-3 text-muted">
+                      No users found.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset Password Modal -->
+      <div class="modal fade" id="resetModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="border-radius: 16px; border: none">
+            <div
+              class="modal-header"
+              style="
+                background: linear-gradient(135deg, #0d1f14, #1a4a2a);
+                border-radius: 16px 16px 0 0;
+              "
+            >
+              <h5 class="modal-title text-white">
+                <i class="fas fa-key me-2"></i>Reset Password
+              </h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body p-4">
+              <p style="font-size: 0.85rem; color: #555" class="mb-3">
+                Resetting password for:
+                <strong>{{selected.fullName}}</strong> ({{selected.username}})
+              </p>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">New Password</label>
+                <input
+                  v-model="newPw"
+                  type="password"
+                  class="form-control"
+                  placeholder="At least 6 characters"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold"
+                  >Confirm New Password</label
+                >
+                <input
+                  v-model="confirmPw"
+                  type="password"
+                  class="form-control"
+                  placeholder="Repeat new password"
+                />
+              </div>
+              <div
+                v-if="resetMsg"
+                :class="'alert alert-'+(resetOk?'success':'danger')"
+                style="font-size: 0.82rem"
+              >
+                {{resetMsg}}
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button
+                class="btn btn-warning btn-sm"
+                @click="resetPassword"
+                :disabled="resetting"
+              >
+                <span v-if="!resetting"
+                  ><i class="fas fa-key me-1"></i>Reset Password</span
+                >
+                <span v-else
+                  ><span class="spinner-border spinner-border-sm me-1"></span
+                  >Resetting...</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      Vue.createApp({
+        data() {
+          return {
+            user: JSON.parse(localStorage.getItem("kgl_user") || "{}"),
+            users: [],
+            selected: {},
+            newPw: "",
+            confirmPw: "",
+            resetMsg: "",
+            resetOk: false,
+            resetting: false,
+            msg: "",
+            msgOk: false,
+          };
+        },
+        methods: {
+          headers() {
+            return {
+              Authorization: "Bearer " + localStorage.getItem("kgl_token"),
+            };
+          },
+          async loadUsers() {
+            try {
+              const r = await fetch("/api/auth/users", {
+                headers: this.headers(),
+              });
+              if (r.ok) this.users = await r.json();
+              else this.msg = "Failed to load users.";
+            } catch {
+              this.msg = "Cannot connect to server.";
+            }
+          },
+          openReset(u) {
+            this.selected = u;
+            this.newPw = "";
+            this.confirmPw = "";
+            this.resetMsg = "";
+            this.resetOk = false;
+            new bootstrap.Modal(document.getElementById("resetModal")).show();
+          },
+          async resetPassword() {
+            this.resetMsg = "";
+            if (!this.newPw || !this.confirmPw) {
+              this.resetMsg = "Please fill in both fields.";
+              this.resetOk = false;
+              return;
+            }
+            if (this.newPw !== this.confirmPw) {
+              this.resetMsg = "Passwords do not match.";
+              this.resetOk = false;
+              return;
+            }
+            if (this.newPw.length < 6) {
+              this.resetMsg = "Password must be at least 6 characters.";
+              this.resetOk = false;
+              return;
+            }
+            this.resetting = true;
+            try {
+              const r = await fetch(
+                `/api/auth/reset-password/${this.selected._id}`,
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                    ...this.headers(),
+                  },
+                  body: JSON.stringify({ newPassword: this.newPw }),
+                },
+              );
+              const d = await r.json();
+              this.resetOk = r.ok;
+              this.resetMsg = d.message || d.error;
+              if (r.ok) {
+                this.newPw = "";
+                this.confirmPw = "";
+              }
+            } catch {
+              this.resetMsg = "Server error. Try again.";
+              this.resetOk = false;
+            } finally {
+              this.resetting = false;
+            }
+          },
+          logout() {
+            localStorage.clear();
+            window.location.href = "/login.html";
+          },
+        },
+        mounted() {
+          const token = localStorage.getItem("kgl_token");
+          if (!token) {
+            window.location.href = "/login.html";
+            return;
+          }
+          if (this.user.role !== "Director") {
+            window.location.href = "/dashboard.html";
+            return;
+          }
+          this.loadUsers();
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
