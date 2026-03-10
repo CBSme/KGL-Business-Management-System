@@ -7,7 +7,7 @@ A full-stack web application for **Karibu Groceries Ltd (KGL)** to manage sales,
 ## Tech Stack
 
 - **Backend:** Node.js, Express, MongoDB (Mongoose)
-- **Frontend:** Vue 3, Bootstrap 5, Font Awesome
+- **Frontend:** HTML5, CSS3, Vue 3, Bootstrap 5, Font Awesome
 - **Auth:** JWT (8h expiry), bcryptjs
 - **Email:** Nodemailer + Gmail App Password
 - **Tools:** ESLint, Prettier, Husky, lint-staged
@@ -94,49 +94,56 @@ The app runs at **http://localhost:3000**
 ## Project Structure
 
 `
-karibu-software/
-├── models/
-│   ├── User.js
-│   ├── Sales.js
-│   ├── CreditSales.js
-│   ├── Procurement.js
-│   ├── Stock.js
-│   ├── Notification.js
-│   └── Produce.js
-├── routes/
-│   ├── authRoutes.js
-│   ├── salesRoutes.js
-│   ├── creditRoutes.js
-│   ├── procurementRoutes.js
-│   ├── stockRoutes.js
-│   └── reportRoutes.js
+KARIBU-SOFTWARE/
+├── .husky/
+│   └── pre-commit
 ├── middleware/
 │   └── auth.js
+├── models/
+│   ├── CreditSales.js
+│   ├── Notification.js
+│   ├── Procurement.js
+│   ├── Produce.js
+│   ├── Sales.js
+│   ├── Stock.js
+│   └── User.js
+├── node_modules/
+├── public/
+│   ├── credit.html
+│   ├── dashboard.html
+│   ├── forgot-password.html
+│   ├── login.html
+│   ├── procurement.html
+│   ├── reports.html
+│   ├── reset-password.html
+│   ├── sales.html
+│   ├── stock.html
+│   └── users.html
+├── routes/
+│   ├── authRoutes.js
+│   ├── creditRoutes.js
+│   ├── procurementRoutes.js
+│   ├── reportRoutes.js
+│   ├── salesRoutes.js
+│   └── stockRoutes.js
 ├── utils/
 │   └── mailer.js
-├── public/
-│   ├── login.html
-│   ├── dashboard.html
-│   ├── sales.html
-│   ├── credit.html
-│   ├── procurement.html
-│   ├── stock.html
-│   ├── reports.html
-│   ├── users.html
-│   ├── forgot-password.html
-│   └── reset-password.html
-├── .env               ← never commit
-├── .env.example       ← commit this
+├── .env               
+├── .env.example
 ├── .gitignore
-├── eslint.config.js
+├── .prettierignore
 ├── .prettierrc
+├── eslint.config.js
+├── package-lock.json
+├── package.json
+├── README.md
 ├── seed.js
 └── server.js
 `
 
 ---
 
-## 📧 Gmail App Password Setup
+## Gmail App Password Setup
 
 1. Go to your Google Account → Security
 2. Enable **2-Step Verification** if not already on
@@ -146,7 +153,7 @@ karibu-software/
 
 ---
 
-## 🛠️ Development Scripts
+## Development Scripts
 
 `ash
 npm run dev      # Start with nodemon (auto-restart)
