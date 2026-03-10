@@ -27,7 +27,7 @@ A full-stack web application for **Karibu Groceries Ltd (KGL)** to manage sales,
 | View Reports | ✅ | ✅ | ❌ |
 | Branch Comparison | ✅ | ❌ | ❌ |
 | User Management | ✅ | ❌ | ❌ |
-| Reset Any Password | ✅ | ✅ | ❌ |
+| Reset Any Password | ✅ | ❌ | ❌ |
 
 ---
 
