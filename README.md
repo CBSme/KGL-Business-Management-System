@@ -75,19 +75,12 @@ The app runs at **http://localhost:3000**
 
 ---
 
-## Default Login Credentials
+##  Default Login Credentials
 
-> ⚠️ Change all passwords immediately after first login in production.
+Default credentials are set during database seeding via `seed.js`.
+Contact the system administrator for login access.
 
-| Role | Username | Password | Branch |
-|---|---|---|---|
-| Director | director | director123 | All |
-| Manager | manager1 | manager123 | Maganjo |
-| Manager | manager2 | manager123 | Matugga |
-| Sales Agent | gent1 | gent123 | Maganjo |
-| Sales Agent | gent2 | gent123 | Maganjo |
-| Sales Agent | gent3 | gent123 | Matugga |
-| Sales Agent | gent4 | gent123 | Matugga |
+> ⚠️ All default passwords must be changed immediately after first login.
 
 ---
 
