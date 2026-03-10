@@ -34,18 +34,18 @@ A full-stack web application for **Karibu Groceries Ltd (KGL)** to manage sales,
 ## Setup Instructions
 
 ### 1. Clone the repository
-`ash
-git clone https://github.com/yourusername/karibu-software.git
+`Bash
+git clone https://github.com/yourusername/KGL-Business-Management-System
 cd karibu-software
 `
 
 ### 2. Install dependencies
-`ash
+`Bash
 npm install
 `
 
 ### 3. Configure environment variables
-`ash
+`Bash
 # Copy the example file
 cp .env.example .env
 `
@@ -57,13 +57,13 @@ Then open .env and fill in your real values:
 - APP_URL — your app's base URL
 
 ### 4. Seed the database (first time only)
-`ash
+`Bash
 node seed.js
 `
 This creates 7 default users and 10 stock entries.
 
 ### 5. Start the server
-`ash
+`Bash
 # Development (with auto-restart)
 npm run dev
 
@@ -148,7 +148,7 @@ KARIBU-SOFTWARE/
 
 ## Development Scripts
 
-`ash
+`Bash
 npm run dev      # Start with nodemon (auto-restart)
 npm run lint     # Check code with ESLint
 npm run format   # Format code with Prettier
