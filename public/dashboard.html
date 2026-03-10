@@ -701,6 +701,18 @@ if ((sumR && sumR.status === 401) || stkR.status === 401 || notR.status === 401)
 }
 
 if (sumR && sumR.ok) this.summary = await sumR.json();
+
+// For Sales Agents: fetch their own sales count separately
+if (isAgent) {
+  const agentSalesR = await fetch("/api/sales", { headers: this.headers() });
+  if (agentSalesR.ok) {
+    const agentSales = await agentSalesR.json();
+    this.summary = {
+  salesCount: agentSales.filter(s => s.salesAgentName === this.user.fullName).length
+};
+  }
+}
+
 if (stkR.ok) this.stocks = await stkR.json();
 if (notR.ok) this.notifications = await notR.json();
 
