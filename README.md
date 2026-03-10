@@ -7,7 +7,7 @@ A full-stack web application for **Karibu Groceries Ltd (KGL)** to manage sales,
 ## Tech Stack
 
 - **Backend:** Node.js, Express, MongoDB (Mongoose)
-- **Frontend:** HTML5, CSS3, Vue 3, Bootstrap 5, Font Awesome
+- **Frontend:** HTML5, CSS3, JavaScript, Vue 3, Bootstrap 5, Font Awesome
 - **Auth:** JWT (8h expiry), bcryptjs
 - **Email:** Nodemailer + Gmail App Password
 - **Tools:** ESLint, Prettier, Husky, lint-staged
